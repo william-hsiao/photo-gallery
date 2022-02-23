@@ -8,7 +8,7 @@ import methodOverride from "method-override";
 import cors from "cors";
 import "@tsed/ajv";
 import "@tsed/swagger";
-import { config, rootDir } from "./config";
+import { config } from "./config";
 
 @Configuration({
   ...config,
@@ -16,7 +16,12 @@ import { config, rootDir } from "./config";
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
   mount: {
-    "/api": [`${rootDir}/**/controllers/*.ts`],
+    "/api": [`${config.rootDir}/**/controllers/*.ts`],
+  },
+  statics: {
+    [config.assetsRoute]: {
+      root: config.assetsDirPath
+    }
   },
   swagger: [
     {
