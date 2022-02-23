@@ -11,4 +11,10 @@ export default defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  server: {
+    proxy: {
+      "/assets": "http://localhost:8083",
+      "/api": "http://localhost:8083",
+    },
+  },
 });
