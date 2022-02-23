@@ -8,8 +8,7 @@ import methodOverride from "method-override";
 import cors from "cors";
 import "@tsed/ajv";
 import "@tsed/swagger";
-import { config, rootDir } from "./config";
-import { IndexCtrl } from "./controllers/pages/IndexController";
+import { config } from "./config";
 
 @Configuration({
   ...config,
@@ -17,21 +16,19 @@ import { IndexCtrl } from "./controllers/pages/IndexController";
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
   mount: {
-    "/rest": [`${rootDir}/controllers/**/*.ts`],
-    "/": [IndexCtrl],
+    "/api": [`${config.rootDir}/**/controllers/*.ts`],
+  },
+  statics: {
+    [config.photoAssetsRoute]: {
+      root: config.photosDirPath
+    }
   },
   swagger: [
     {
-      path: "/v3/docs",
+      path: "/docs",
       specVersion: "3.0.1",
     },
   ],
-  views: {
-    root: `${rootDir}/views`,
-    extensions: {
-      ejs: "ejs",
-    },
-  },
   exclude: ["**/*.spec.ts"],
 })
 export class Server {
