@@ -1,15 +1,15 @@
 import { join } from "path";
 import { loggerConfig } from "./logger";
-import { assetsDirPath } from './env';
+import { photosDirPath } from './env';
 
 const { version } = require("../../package.json");
 const rootDir = join(__dirname, "..");
-const assetsRoute = '/assets';
+const photoAssetsRoute = '/assets/photos';
 
 export const config: Partial<TsED.Configuration> = {
   version,
   rootDir,
-  assetsDirPath,
-  assetsRoute,
+  photosDirPath,
+  photoAssetsRoute,
   logger: loggerConfig,
 };

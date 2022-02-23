@@ -13,7 +13,7 @@ See [Ts.ED](https://tsed.io) project for more information.
 $ yarn install
 
 # serve
-$ ASSETS_DIR_PATH="path_to_assets" yarn start
+$ PHOTOS_DIR_PATH="path_to_assets" yarn start
 
 # build for production
 $ yarn build

@@ -1,17 +1,18 @@
 import fs from "fs";
 import { Injectable, Constant } from "@tsed/di";
 
-const ASSETS_PATH = "/assets";
-
 @Injectable()
 export class PhotoService {
-  @Constant("assetsDirPath")
-  assetsDirPath: string;
+  @Constant("photosDirPath")
+  photosDirPath: string;
+
+  @Constant("photoAssetsRoute")
+  photoAssetsRoute: string;
 
   async findAll() {
     const photos = fs
-      .readdirSync(this.assetsDirPath)
-      .map((filename) => `${ASSETS_PATH}/${filename}`);
+      .readdirSync(this.photosDirPath)
+      .map((filename) => `${this.photoAssetsRoute}/${filename}`);
     return photos;
   }
 }

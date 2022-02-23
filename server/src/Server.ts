@@ -19,8 +19,8 @@ import { config } from "./config";
     "/api": [`${config.rootDir}/**/controllers/*.ts`],
   },
   statics: {
-    [config.assetsRoute]: {
-      root: config.assetsDirPath
+    [config.photoAssetsRoute]: {
+      root: config.photosDirPath
     }
   },
   swagger: [
