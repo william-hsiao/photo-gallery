@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getPhotoList } from "@/apiClient";
 import Showcase from "@/components/Showcase.vue";
 
-const photoUrls = ref([
-  "assets/photos/logo.png",
-  "assets/photos/1280px-Grafana_logo.png",
-]); // TODO: Update with API call
+const photoUrls = ref([]);
+
+onMounted(async () => {
+  photoUrls.value = await getPhotoList();
+});
 </script>
 
 <template>

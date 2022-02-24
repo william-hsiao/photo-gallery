@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import * as PIXI from "pixi.js";
 import { PHOTO_DURATION } from "@/constants";
 
@@ -66,11 +66,16 @@ const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
 onMounted(() => {
   pixiApp.value = new PIXI.Application({ resizeTo: window });
   pixiCanvas.value.appendChild(pixiApp.value.view);
-
-  if (props.photoUrls.length > 0) {
-    prepareNextPhoto(0);
-  }
 });
+
+watch(
+  () => props.photoUrls,
+  (photoUrls) => {
+    if (props.photoUrls.length > 0) {
+      prepareNextPhoto(0);
+    }
+  }
+);
 </script>
 
 <template>
