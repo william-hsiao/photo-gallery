@@ -20,11 +20,28 @@ const getNextPhotoIndex = () => {
     : currentPhotoIndex.value + 1;
 };
 
+const setSprite = (texture) => {
+  nextPhotoSprite.value = new PIXI.Sprite(texture);
+};
+const positionSprite = (sprite) => {
+  sprite.anchor.set(0.5);
+  sprite.scale.set(
+    Math.min(
+      pixiApp.value.view.width / sprite.width,
+      pixiApp.value.view.height / sprite.height
+    )
+  );
+  sprite.x = pixiApp.value.view.width / 2;
+  sprite.y = pixiApp.value.view.height / 2;
+};
+
 const transitionNextPhoto = () => {
   if (currentPhotoSprite.value) {
     pixiApp.value.stage.removeChild(currentPhotoSprite.value);
     currentPhotoSprite.value.destroy();
   }
+
+  positionSprite(nextPhotoSprite.value);
   pixiApp.value.stage.addChild(nextPhotoSprite.value);
 
   currentPhotoSprite.value = nextPhotoSprite.value;
@@ -41,18 +58,14 @@ const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
       const nextImageUrl = props.photoUrls[getNextPhotoIndex()];
 
       if (PIXI.utils.TextureCache[nextImageUrl]) {
-        nextPhotoSprite.value = new PIXI.Sprite(
-          PIXI.utils.TextureCache[nextImageUrl]
-        );
+        setSprite(PIXI.utils.TextureCache[nextImageUrl]);
         resolve();
         return;
       }
 
       pixiApp.value.loader.add(nextImageUrl);
       pixiApp.value.loader.onComplete.add((loader, resources) => {
-        nextPhotoSprite.value = new PIXI.Sprite(
-          resources[nextImageUrl].texture
-        );
+        setSprite(resources[nextImageUrl].texture);
         loader.reset();
         loader.onComplete.detachAll();
         resolve();
