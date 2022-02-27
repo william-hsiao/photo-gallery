@@ -12,6 +12,7 @@ export default defineConfig({
     },
   },
   server: {
+    host: true,
     proxy: {
       "/assets": "http://localhost:8083",
       "/api": "http://localhost:8083",
