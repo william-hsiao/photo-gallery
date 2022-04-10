@@ -25,10 +25,9 @@ RUN yarn install --production
 
 COPY ./src ./src
 COPY ./dist ./dist
-COPY ./views ./views
 
-EXPOSE 8081
-ENV PORT 8081
+EXPOSE 8083
+ENV PORT 8083
 ENV NODE_ENV production
 
 CMD ["yarn", "start:prod"]

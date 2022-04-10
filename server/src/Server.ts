@@ -20,8 +20,8 @@ import { config } from "./config";
   },
   statics: {
     [config.photoAssetsRoute]: {
-      root: config.photosDirPath
-    }
+      root: config.photosDirPath,
+    },
   },
   swagger: [
     {
