@@ -6,12 +6,12 @@ import { PHOTO_DURATION } from "@/constants";
 const props = defineProps<{
   photoUrls: string[];
 }>();
-const pixiCanvas = ref(null);
-const pixiApp = ref(null);
+const pixiCanvas = ref<HTMLElement>();
+const pixiApp = ref<PIXI.Application>(new PIXI.Application({ resizeTo: window }));
 
-const currentPhotoIndex = ref(null);
-const currentPhotoSprite = ref(null);
-const nextPhotoSprite = ref(null);
+const currentPhotoIndex = ref();
+const currentPhotoSprite = ref();
+const nextPhotoSprite = ref();
 
 const getNextPhotoIndex = () => {
   if (currentPhotoIndex.value == null) return 0;
@@ -20,10 +20,10 @@ const getNextPhotoIndex = () => {
     : currentPhotoIndex.value + 1;
 };
 
-const setSprite = (texture) => {
+const setSprite = (texture: PIXI.Texture) => {
   nextPhotoSprite.value = new PIXI.Sprite(texture);
 };
-const positionSprite = (sprite) => {
+const positionSprite = (sprite: PIXI.Sprite) => {
   sprite.anchor.set(0.5);
   sprite.scale.set(
     Math.min(
@@ -53,8 +53,10 @@ const transitionNextPhoto = () => {
 
 const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
   await Promise.all([
-    new Promise((resolve) => setTimeout(() => resolve(), timeout)),
-    new Promise((resolve) => {
+    new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), timeout);
+    }),
+    new Promise<void>((resolve) => {
       const nextImageUrl = props.photoUrls[getNextPhotoIndex()];
 
       if (PIXI.utils.TextureCache[nextImageUrl]) {
@@ -63,9 +65,10 @@ const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
         return;
       }
 
+      // @ts-ignore No overload matches but this is a valid input
       pixiApp.value.loader.add(nextImageUrl);
       pixiApp.value.loader.onComplete.add((loader, resources) => {
-        setSprite(resources[nextImageUrl].texture);
+        setSprite(resources[nextImageUrl]!.texture!);
         loader.reset();
         loader.onComplete.detachAll();
         resolve();
@@ -77,8 +80,7 @@ const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
 };
 
 onMounted(() => {
-  pixiApp.value = new PIXI.Application({ resizeTo: window });
-  pixiCanvas.value.appendChild(pixiApp.value.view);
+  pixiCanvas.value?.appendChild(pixiApp.value.view);
 });
 
 watch(
