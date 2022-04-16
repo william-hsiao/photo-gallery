@@ -38,7 +38,7 @@ const positionSprite = (sprite: PIXI.Sprite) => {
 const transitionNextPhoto = () => {
   if (currentPhotoSprite.value) {
     pixiApp.value.stage.removeChild(currentPhotoSprite.value);
-    currentPhotoSprite.value.destroy();
+    currentPhotoSprite.value.destroy({ texture: true });
   }
 
   positionSprite(nextPhotoSprite.value);
@@ -58,12 +58,6 @@ const prepareNextPhoto = async (timeout: number = PHOTO_DURATION) => {
     }),
     new Promise<void>((resolve) => {
       const nextImageUrl = props.photoUrls[getNextPhotoIndex()];
-
-      if (PIXI.utils.TextureCache[nextImageUrl]) {
-        setSprite(PIXI.utils.TextureCache[nextImageUrl]);
-        resolve();
-        return;
-      }
 
       // @ts-ignore No overload matches but this is a valid input
       pixiApp.value.loader.add(nextImageUrl);
