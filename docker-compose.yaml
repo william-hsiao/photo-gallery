@@ -1,0 +1,27 @@
+version: "3.9" # optional since v1.27.0
+services:
+  client:
+    image: photo-gallery/client
+    build:
+      context: client
+      dockerfile: docker/Dockerfile.local
+    environment:
+      VITE_PORT: '3000'
+      VITE_BE_URL: http://server:8000
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+  server:
+    image: photo-gallery/server
+    build:
+      context: server
+      dockerfile: docker/Dockerfile.local
+    environment:
+      PORT: 8000
+      PHOTOS_DIR_PATH: /media
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./server:/app
+      - ./media:/media
