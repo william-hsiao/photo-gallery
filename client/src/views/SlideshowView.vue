@@ -1,10 +1,18 @@
 <script setup lang="ts">
+import { ref, onBeforeMount } from "vue";
+import { getPhotoList, type Photos } from "@/apiClient";
 import SlideshowPlayer from "@/components/SlideshowPlayer/SlideshowPlayer.vue";
+
+const photoUrls = ref<Photos>([]);
+
+onBeforeMount(async () => {
+  photoUrls.value = await getPhotoList();
+});
 </script>
 
 <template>
   <div class="slideshow-container">
-    <SlideshowPlayer />
+    <SlideshowPlayer :photoUrls="photoUrls" />
   </div>
 </template>
 

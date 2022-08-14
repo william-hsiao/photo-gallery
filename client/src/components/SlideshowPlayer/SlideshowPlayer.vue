@@ -1,18 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import {
+  defineProps,
+  onMounted,
+  onBeforeUnmount,
+  ref,
+  type PropType,
+} from "vue";
 import SlideshowPlayerControls from "./SlideshowPlayerControls.vue";
+import SlideshowPlayerCanvas from "./SlideshowPlayerCanvas.vue";
 
 const CONTROLS_TIMEOUT = 1500;
+const PHOTO_INTERVAL = 3000;
+
+const props = defineProps({
+  photoUrls: { type: Array as PropType<string[]>, required: true },
+});
 
 const root = ref<HTMLElement>();
 const isFullscreen = ref(false);
 const showControls = ref(true);
 const freezeControls = ref(false);
 const mouseActivityTimeoutId = ref<number | null>(null);
+const activePhotoIndex = ref(0);
+const photoInterval = ref<number | null>(null);
 
-onMounted(() => {
+onMounted(async () => {
   root.value?.addEventListener("fullscreenchange", exitFullscreenHandler);
   root.value?.addEventListener("mousemove", mouseMoveHandler);
+
+  photoInterval.value = setInterval(() => {
+    if (props.photoUrls.length === 0) return;
+    activePhotoIndex.value =
+      (activePhotoIndex.value + 1) % props.photoUrls.length;
+  }, PHOTO_INTERVAL);
 });
 
 onBeforeUnmount(() => {
@@ -62,11 +82,20 @@ const freezeControlsHandler = (state: boolean) => {
 </script>
 
 <template>
-  <div ref="root" class="slideshow-player">
+  <div
+    ref="root"
+    class="slideshow-player"
+    :class="{ 'hide-cursor': !showControls }"
+  >
     <SlideshowPlayerControls
+      class="slideshow-controls"
       :visible="showControls"
       @toggleMaximise="toggleMaximise"
       @freezeControls="freezeControlsHandler"
+    />
+    <SlideshowPlayerCanvas
+      :photoUrls="props.photoUrls"
+      :activeIndex="activePhotoIndex"
     />
   </div>
 </template>
@@ -75,6 +104,14 @@ const freezeControlsHandler = (state: boolean) => {
 .slideshow-player {
   background: #000;
   height: 100%;
+  position: relative;
   width: 100%;
+
+  &.hide-cursor {
+    cursor: none;
+  }
+}
+.slideshow-controls {
+  z-index: 100;
 }
 </style>

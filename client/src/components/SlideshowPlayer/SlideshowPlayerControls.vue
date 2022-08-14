@@ -29,11 +29,13 @@ const emitFreezeControls = (state: boolean) => {
 
 <style lang="scss" scoped>
 .slideshow-controls {
-  height: 100%;
+  bottom: 0;
+  left: 0;
   opacity: 0;
   pointer-events: none;
-  position: relative;
-  width: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
 
   transition: opacity 0.5s ease;
 
